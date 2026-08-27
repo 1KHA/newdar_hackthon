@@ -205,7 +205,7 @@ export default function Landing() {
         {/* ===== Bottom band ===== */}
         <section className="dhl-bottom">
           <h2 className="dhl-bottom-text" data-reveal>
-            <Diamond /> المشاريع الفائزة في النسخة الثالثة من جائزة مايدة محي الدين ناظر للابتكار
+            <Diamond /> المشاريع الفائزة في جائزة مايدة محي الدين ناظر للابتكار
           </h2>
         </section>
 

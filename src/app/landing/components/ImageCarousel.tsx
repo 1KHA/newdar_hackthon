@@ -11,16 +11,37 @@ export interface WinnerSlide {
   label: string;
 }
 
+export interface WinnerEdition {
+  id: string;
+  /** Tab label, e.g. "النسخة الثالثة". */
+  label: string;
+  /** Poster height ÷ width. The cards and the stage follow it (default 4:5). */
+  ratio?: number;
+  slides: WinnerSlide[];
+}
+
 /* Winner posters live in public/winners; the web/ copies are resized for the page. */
-const WINNERS: WinnerSlide[] = [
+const EDITION_THREE: WinnerSlide[] = [
   { src: "/winners/web/first.jpg", title: "الفريق الفائز بالمركز الأول", label: "المركز الأول" },
   { src: "/winners/web/second.jpg", title: "الفريق الفائز بالمركز الثاني", label: "المركز الثاني" },
   { src: "/winners/web/third.jpg", title: "الفريق الفائز بالمركز الثالث", label: "المركز الثالث" },
   { src: "/winners/web/audience.jpg", title: "الفريق الفائز بجائزة تصويت الجمهور", label: "تصويت الجمهور" },
 ];
 
+/* Second edition: near-square posters, hence the per-edition ratio below. */
+const EDITION_TWO: WinnerSlide[] = [
+  { src: "/winners/web2/first.jpg", title: "الفريق الفائز بالمركز الأول", label: "المركز الأول" },
+  { src: "/winners/web2/second.jpg", title: "الفريق الفائز بالمركز الثاني", label: "المركز الثاني" },
+  { src: "/winners/web2/third.jpg", title: "الفريق الفائز بالمركز الثالث", label: "المركز الثالث" },
+];
+
+const EDITIONS: WinnerEdition[] = [
+  { id: "third", label: "النسخة الثالثة", slides: EDITION_THREE },
+  { id: "second", label: "النسخة الثانية", ratio: 1.02, slides: EDITION_TWO },
+];
+
 interface ImageCarouselProps {
-  slides?: WinnerSlide[];
+  editions?: WinnerEdition[];
   autoRotateInterval?: number;
 }
 
@@ -42,7 +63,10 @@ const Chevron = ({ dir }: { dir: "left" | "right" }) => (
  * is over the stage, while dragging, while the lightbox is open, and while the
  * tab is hidden. Clicking the centre card opens the poster full-screen.
  */
-export default function ImageCarousel({ slides = WINNERS, autoRotateInterval = 5000 }: ImageCarouselProps) {
+export default function ImageCarousel({ editions = EDITIONS, autoRotateInterval = 5000 }: ImageCarouselProps) {
+  const [editionIndex, setEditionIndex] = useState(0);
+  const edition = editions[editionIndex];
+  const slides = edition.slides;
   const n = slides.length;
   const [index, setIndex] = useState(0);
   const [drag, setDrag] = useState(0);
@@ -139,6 +163,14 @@ export default function ImageCarousel({ slides = WINNERS, autoRotateInterval = 5
     else go(i);
   };
 
+  /* Switching edition restarts the deck: slide counts differ between editions. */
+  const selectEdition = (i: number) => {
+    setEditionIndex(i);
+    setIndex(0);
+    setDrag(0);
+    setLightbox(null);
+  };
+
   const onStageKey = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") { e.preventDefault(); next(); }
     else if (e.key === "ArrowRight") { e.preventDefault(); prev(); }
@@ -148,7 +180,29 @@ export default function ImageCarousel({ slides = WINNERS, autoRotateInterval = 5
   const current = slides[index];
 
   return (
-    <section className="dhl-wc" aria-roledescription="carousel" aria-label="المشاريع الفائزة" data-reveal>
+    <section
+      className="dhl-wc"
+      aria-roledescription="carousel"
+      aria-label="المشاريع الفائزة"
+      data-reveal
+      style={{ "--wc-ratio": edition.ratio ?? 1.25 } as React.CSSProperties}
+    >
+      {editions.length > 1 && (
+        <div className="dhl-wc-editions" role="tablist" aria-label="نسخة الجائزة">
+          {editions.map((e, i) => (
+            <button
+              key={e.id}
+              type="button"
+              role="tab"
+              aria-selected={i === editionIndex}
+              className={`dhl-wc-edition${i === editionIndex ? " is-active" : ""}`}
+              onClick={() => selectEdition(i)}
+            >
+              {e.label}
+            </button>
+          ))}
+        </div>
+      )}
       <div
         ref={stageRef}
         className={`dhl-wc-stage${dragging ? " is-dragging" : ""}`}
@@ -205,7 +259,7 @@ export default function ImageCarousel({ slides = WINNERS, autoRotateInterval = 5
         </button>
       </div>
 
-      <p className="dhl-wc-caption" key={index} aria-live="polite">
+      <p className="dhl-wc-caption" key={`${edition.id}-${index}`} aria-live="polite">
         {current.title}
         <span className="dhl-wc-count" dir="ltr">{index + 1} / {n}</span>
       </p>

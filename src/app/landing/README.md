@@ -22,7 +22,8 @@ src/app/landing/
 ├── landing.css     # All styles (scoped with .dhl- prefix)
 ├── components/
 │   ├── CountdownTimer.tsx # Live hero countdown (rolling digits), ported from the home page
-│   ├── ImageCarousel.tsx  # Winning-projects carousel (auto-rotate + drag), ported from the home page
+│   ├── ImageCarousel.tsx  # Winning-projects carousel: edition tabs (النسخة الثالثة / الثانية),
+│   │                      # coverflow deck, drag/arrows/chips, lightbox
 │   └── FAQSection.tsx     # Expandable FAQ, ported from the home page
 ├── assets/         # Cropped image assets from the original artwork
 │   ├── carousel/   # 01/02/03.png carousel slides
@@ -68,4 +69,9 @@ logo and ornament as cropped assets).
     stops shrinking below ~880px so the digits stay readable, and can never grow past 1.4×
     the artwork scale, which is what keeps it inside the gap between the label and the date panel
     at every width (verified from 320px to 2560px).
+- Winner posters: edition 3 in `public/winners/web/`, edition 2 in `public/winners/web2/`
+  (web-sized JPEGs; the full-size originals stay in `public/winners/` and `public/0{1,2,3}.png`).
+  To add an edition, append to `EDITIONS` in `components/ImageCarousel.tsx` — each entry carries its
+  own tab label, slides and `ratio` (poster height ÷ width, default 4:5), which drives both the card
+  aspect and the stage height.
 - The page is RTL (`dir="rtl"`) and uses the Somar font family bundled in `assets/fonts/`.

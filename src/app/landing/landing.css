@@ -1067,9 +1067,46 @@
   -webkit-user-select: none;
 }
 
+/* edition switcher (segmented control above the deck) */
+.dhl-wc-editions {
+  width: max-content;
+  max-width: calc(100% - 2rem);
+  margin: 0 auto clamp(1rem, 2.2vw, 1.9rem);
+  padding: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  border-radius: 999px;
+  background: rgba(98, 15, 16, 0.07);
+}
+
+.dhl-wc-edition {
+  padding: 0.5em 1.5em;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--maroon);
+  font: inherit;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.dhl-wc-edition:hover {
+  background: rgba(98, 15, 16, 0.12);
+}
+.dhl-wc-edition.is-active {
+  background: var(--maroon);
+  color: #ffffff;
+  box-shadow: 0 8px 18px -10px rgba(98, 15, 16, 0.9);
+}
+
 .dhl-wc-stage {
   position: relative;
-  height: calc(var(--wc-card) * 1.25 + 4rem);
+  /* --wc-ratio (poster height ÷ width) is set per edition by the component */
+  height: calc(var(--wc-card) * var(--wc-ratio, 1.25) + 4rem);
   perspective: 1400px;
   touch-action: pan-y;
   cursor: grab;
@@ -1095,7 +1132,7 @@
   top: 2rem;
   left: 50%;
   width: var(--wc-card);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / var(--wc-ratio, 1.25);
   margin: 0 0 0 calc(var(--wc-card) / -2);
   border-radius: 18px;
   overflow: hidden;
