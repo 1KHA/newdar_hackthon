@@ -6,13 +6,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
-import { showAdminToast } from '@/components/admin/admin-toaster'
+import { useToast } from '../../../components/ui/use-toast'
 import { useAuth } from '@/contexts/auth-context'
 
 export default function AdminLoginPage() {
   const router = useRouter()
   const { user, isLoading: authLoading, checkAuth } = useAuth()
+  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  /* Persistent inline error: AdminToaster is only mounted inside the dashboard
+     layout, so a toast fired from this page had nothing to render it. */
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -48,11 +52,7 @@ export default function AdminLoginPage() {
         // If user is logged in but not as admin
         if (user && user.role !== 'admin') {
           console.log(`⚠️ User logged in with role: ${user.role}, but not admin`);
-          showAdminToast({
-            title: "تحذير",
-            description: `أنت مسجل دخول كـ ${user.role}. يرجى تسجيل الخروج أولاً للدخول كمسؤول.`,
-            variant: "destructive",
-          });
+          setErrorMessage(`أنت مسجل دخول كـ ${user.role}. يرجى تسجيل الخروج أولاً للدخول كمسؤول.`);
         }
       } catch (error) {
         console.error('Error checking admin status:', error);
@@ -64,6 +64,7 @@ export default function AdminLoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrorMessage(null)
     setIsLoading(true)
 
     console.log('🔐 Admin login attempt:', { username: formData.username });
@@ -87,7 +88,7 @@ export default function AdminLoginPage() {
       });
 
       if (response.ok && data.success) {
-        showAdminToast({
+        toast({
           title: "نجح",
           description: "تم تسجيل الدخول كمسؤول بنجاح!",
         });
@@ -101,26 +102,19 @@ export default function AdminLoginPage() {
         router.push('/admin-hackton-dashboard');
       } else {
         console.log('❌ Admin login failed:', data.error);
-        showAdminToast({
-          title: "خطأ",
-          description: data.error || "فشل تسجيل الدخول",
-          variant: "destructive",
-        })
+        setErrorMessage(data.error || "فشل تسجيل الدخول")
       }
     } catch (error) {
       console.error('❌ Admin login error:', error);
-      showAdminToast({
-        title: "خطأ",
-        description: "حدث خطأ أثناء تسجيل الدخول",
-        variant: "destructive",
-      })
+      setErrorMessage("حدث خطأ أثناء تسجيل الدخول")
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Show loading while checking auth
-  if (authLoading) {
+  // Show loading while checking auth — but not while this page's own submit is
+  // running, or the form (and its error) would vanish mid-attempt.
+  if (authLoading && !isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -155,6 +149,15 @@ export default function AdminLoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {errorMessage && (
+            <div
+              role="alert"
+              className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+              dir="rtl"
+            >
+              {errorMessage}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="username">اسم المستخدم</Label>

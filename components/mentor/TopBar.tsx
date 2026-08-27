@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import NotificationDropdown from "@/components/ui/notification-dropdown";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function TopBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,9 +34,15 @@ export default function TopBar() {
     }
   };
 
-  const handleLogout = () => {
-    // Handle logout functionality
-    window.location.href = "/";
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    // Must go through the auth context: it calls /api/logout to clear the
+    // httpOnly cookie server-side, clears localStorage and resets user state.
+    // Previously this just did `window.location.href = "/"`, which left the
+    // session cookie intact — so /login saw a valid mentor session and
+    // immediately redirected straight back into the mentor dashboard.
+    await logout();
   };
 
   return (

@@ -16,6 +16,9 @@ export default function LoginPage() {
   const { toast } = useToast()
   const { login, user, isLoading: authLoading } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  /* Persistent inline error — a toast disappears after a few seconds and is easy
+     to miss on a failed login attempt. */
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -58,6 +61,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrorMessage(null)
     setIsLoading(true)
 
     try {
@@ -72,19 +76,11 @@ export default function LoginPage() {
         // The auth context will update the user state
         // The useEffect above will handle the redirect based on user role
       } else {
-        toast({
-          title: "خطأ",
-          description: "بيانات الدخول غير صحيحة",
-          variant: "destructive",
-        })
+        setErrorMessage("بيانات الدخول غير صحيحة")
       }
     } catch (error) {
       console.error('Login error:', error)
-      toast({
-        title: "خطأ",
-        description: "حدث خطأ أثناء تسجيل الدخول",
-        variant: "destructive",
-      })
+      setErrorMessage("حدث خطأ أثناء تسجيل الدخول")
     } finally {
       setIsLoading(false)
     }
@@ -119,6 +115,15 @@ export default function LoginPage() {
               </CardHeader>
               <CardContent className="px-10 pb-10">
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {errorMessage && (
+                    <div
+                      role="alert"
+                      className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+                      style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}
+                    >
+                      {errorMessage}
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-base font-medium mb-2 block" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
                       البريد الإلكتروني
