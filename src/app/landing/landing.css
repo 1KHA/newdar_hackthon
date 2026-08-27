@@ -916,8 +916,8 @@
 .dhl-cond-4 { left: calc(2494 * var(--u)); top: calc(1259 * var(--u)); }
 .dhl-cond-5 { left: calc(1386 * var(--u)); top: calc(1259 * var(--u)); }
 .dhl-cond-6 { left: calc(278 * var(--u)); top: calc(1259 * var(--u)); }
-.dhl-cond-7 { left: calc(1939 * var(--u)); top: calc(1799 * var(--u)); }
-.dhl-cond-8 { left: calc(826 * var(--u)); top: calc(1799 * var(--u)); }
+/* seven rules: two rows of three, the last one centred underneath */
+.dhl-cond-7 { left: calc(1386 * var(--u)); top: calc(1799 * var(--u)); }
 
 .dhl-cond-check {
   position: absolute;
@@ -934,14 +934,6 @@
   font-size: calc(65 * var(--u));
   line-height: calc(74 * var(--u));
   text-align: right;
-}
-
-/* card 6 carries a much longer condition; the artwork sets it in a smaller size
-   with tighter leading (6 lines, 60u pitch) so it still fits the same box */
-.dhl-cond-6 p {
-  padding: calc(84 * var(--u)) calc(238 * var(--u)) 0 calc(56 * var(--u));
-  font-size: calc(57 * var(--u));
-  line-height: calc(60 * var(--u));
 }
 
 /* ---------- journey ---------- */
