@@ -182,7 +182,7 @@ export default function Landing() {
         <section className="dhl-journey">
           <Icon name="cube" className="dhl-ico-journey" />
           <h2 className="dhl-sect-title dhl-journey-title" data-reveal>
-            رحلة المشترك <Diamond />
+           رحلة المشاركة<Diamond />
           </h2>
           {[
             { cls: "dhl-jcard-1", n: "1", title: "الاستقطاب والتسجيل", note: "", dates: <>1 - 24 سبتمبر<br />2026 م</> },
