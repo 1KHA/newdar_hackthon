@@ -137,7 +137,7 @@ export default function HomePage() {
       ],
       "eventStatus": "https://schema.org/EventScheduled",
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-      "url": "https://dar-alhekma.dyam.dev/"
+      "url": "https://mayda-four.dyam.tech/"
     };
 
     const script = document.createElement('script');

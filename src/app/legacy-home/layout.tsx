@@ -7,7 +7,7 @@ import type { Metadata } from "next";
  */
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
-  alternates: { canonical: "https://dar-alhekma.dyam.dev/" },
+  alternates: { canonical: "https://mayda-four.dyam.tech/" },
 };
 
 export default function LegacyHomeLayout({ children }: { children: React.ReactNode }) {

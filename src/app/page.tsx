@@ -46,7 +46,10 @@ const structuredData = {
   ],
   eventStatus: "https://schema.org/EventScheduled",
   eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-  url: "https://dar-alhekma.dyam.dev/",
+  startDate: "2026-10-04T16:00:00+03:00",
+  endDate: "2026-10-08T21:00:00+03:00",
+  image: "https://mayda-four.dyam.tech/og.png",
+  url: "https://mayda-four.dyam.tech/",
 };
 
 export default function HomePage() {
