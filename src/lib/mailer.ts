@@ -140,9 +140,8 @@ export function renderEmailHtml(title: string, bodyText: string): string {
       <img src="${baseUrl}/logos/03.png" alt="" style="height:34px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
     </div>
     <div style="background:#620f10;padding:12px 24px;text-align:center">
-      <img src="${baseUrl}/email/hikma-mark.png" alt="" width="20" height="36" style="width:20px;height:36px;display:inline-block;border:0;vertical-align:middle;margin:0 6px">
-      <span style="color:#fccd8d;font-size:14px;font-weight:bold">جائزة مايدة محي الدين ناظر للابتكار</span>
-      <span style="color:#ffffff;font-size:13px"> — هاكاثون الابتكار</span>
+      <img src="${baseUrl}/email/hikma-mark.png" alt="" width="25" height="44" style="width:25px;height:44px;display:inline-block;border:0;vertical-align:middle;margin:0 6px">
+      <span style="color:#fccd8d;font-size:15px;font-weight:bold">جائزة مايدة محي الدين ناظر للابتكار 4</span>
     </div>
     <div style="padding:24px">
       <h2 style="margin:0 0 12px;font-size:16px;color:#620f10">${titleHtml}</h2>
