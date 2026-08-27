@@ -14,6 +14,8 @@ import {
   BarChart3,
   Bell,
   Flag,
+  ScanLine,
+  Settings,
   LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +27,9 @@ const navItems = [
   { name: "الفرق", href: "/admin-hackton-dashboard/teams", icon: UserCheck },
   { name: "المرشدون", href: "/admin-hackton-dashboard/mentors", icon: BookOpen },
   { name: "التسليمات", href: "/admin-hackton-dashboard/milestones", icon: Flag },
+  { name: "تسجيل الحضور", href: "/admin-hackton-dashboard/attendance", icon: ScanLine },
+  { name: "الإشعارات", href: "/admin-hackton-dashboard/notifications", icon: Bell },
+  { name: "الإعدادات والرسائل", href: "/admin-hackton-dashboard/settings", icon: Settings },
 ];
 
 export default function AdminHacktonSidebar() {

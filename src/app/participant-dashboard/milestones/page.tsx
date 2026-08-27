@@ -10,7 +10,6 @@ import { useEffect, useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { uploadFileToSupabase } from "@/lib/supabase-client";
 import { MAX_FILE_SIZE_MB } from "@/lib/constants";
 
 // Define the Milestone type
@@ -159,16 +158,48 @@ export default function ParticipantMilestonesPage() {
     setSubmissionStatus(null);
 
     try {
-      // Step 1: Upload file directly to Supabase Storage
+      // Step 1: Upload file to server-side API endpoint
       setSubmissionStatus({
         success: true,
         message: "جاري رفع الملف..."
       });
 
-      const { filePath, publicUrl } = await uploadFileToSupabase(
-        selectedFile,
-        'milestones'
-      );
+      // Create form data for file upload
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      
+      // Send file to server-side API endpoint
+      const uploadResponse = await fetch("/api/participant/upload-milestone-file", {
+        method: "POST",
+        body: formData,
+      });
+      
+      let errorMessage = "فشل رفع الملف";
+      
+      if (!uploadResponse.ok) {
+        try {
+          const errorData = await uploadResponse.json();
+          if (errorData.error) {
+            // Translate common error messages to Arabic
+            if (errorData.error.includes("File size must be less than")) {
+              errorMessage = `حجم الملف يجب أن يكون أقل من ${MAX_FILE_SIZE_MB} ميجابايت`;
+            } else if (errorData.error.includes("File type not allowed")) {
+              errorMessage = "نوع الملف غير مسموح به. يرجى رفع ملف PDF أو Word أو PowerPoint أو ZIP أو RAR أو JPEG أو PNG";
+            } else {
+              errorMessage = errorData.error;
+            }
+          }
+        } catch (e) {
+          console.error("Error parsing error response:", e);
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const uploadResult = await uploadResponse.json();
+      
+      if (!uploadResult.success || !uploadResult.publicUrl) {
+        throw new Error("فشل رفع الملف: " + (uploadResult.error || "خطأ غير معروف"));
+      }
 
       // Step 2: Send metadata to API to create submission record
       setSubmissionStatus({
@@ -183,7 +214,7 @@ export default function ParticipantMilestonesPage() {
         },
         body: JSON.stringify({
           milestoneId: selectedMilestone.id,
-          filePath: publicUrl,
+          filePath: uploadResult.publicUrl,
           fileName: selectedFile.name,
         }),
       });

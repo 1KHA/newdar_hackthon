@@ -136,9 +136,18 @@ export default function LoginPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-base font-medium mb-2 block" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
-                      كلمة المرور
-                    </Label>
+                    <div className="flex items-center justify-between mb-2">
+                      <Label htmlFor="password" className="text-base font-medium block" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
+                        كلمة المرور
+                      </Label>
+                      <Link
+                        href="/forgot-password"
+                        className="text-xs font-medium hover:underline"
+                        style={{ color: '#620F10', fontFamily: 'Somar-Light, Arial, sans-serif' }}
+                      >
+                        نسيت كلمة المرور؟
+                      </Link>
+                    </div>
                     <Input
                       id="password"
                       type="password"
