@@ -132,12 +132,23 @@ export function renderEmailHtml(title: string, bodyText: string): string {
   // Email clients require absolute image URLs.
   const baseUrl = getAppBaseUrl();
 
-  return `<div dir="rtl" lang="ar" style="direction:rtl;text-align:right;font-family:Tahoma,Arial,sans-serif;background:#f4f6f8;padding:24px">
+  return `<style>
+  /* Phones get the smaller logo strip. Inline styles carry the desktop size, so
+     a client that drops <style> (older Outlook, some Gmail cases) simply keeps
+     the desktop sizes — nothing breaks, the logos are just bigger. !important
+     is required to beat the inline styles and the width/height attributes. */
+  @media only screen and (max-width: 480px) {
+    .em-logo1 { width: 27px !important; height: 38px !important; }
+    .em-logo2 { width: 38px !important; height: 38px !important; }
+    .em-logo3 { width: 76px !important; height: 34px !important; }
+  }
+</style>
+<div dir="rtl" lang="ar" style="direction:rtl;text-align:right;font-family:Tahoma,Arial,sans-serif;background:#f4f6f8;padding:24px">
   <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6e2df">
     <div style="background:#ffffff;padding:18px 24px;text-align:center;border-bottom:1px solid #efeae6">
-      <img src="${baseUrl}/logos/01.png" alt="" width="54" height="76" style="width:54px;height:76px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
-      <img src="${baseUrl}/logos/02.png" alt="جامعة دار الحكمة" width="76" height="76" style="width:76px;height:76px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
-      <img src="${baseUrl}/logos/03.png" alt="" width="152" height="68" style="width:152px;height:68px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
+      <img class="em-logo1" src="${baseUrl}/logos/01.png" alt="" width="54" height="76" style="width:54px;height:76px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
+      <img class="em-logo2" src="${baseUrl}/logos/02.png" alt="جامعة دار الحكمة" width="76" height="76" style="width:76px;height:76px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
+      <img class="em-logo3" src="${baseUrl}/logos/03.png" alt="" width="152" height="68" style="width:152px;height:68px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
     </div>
     <div style="background:#620f10;padding:12px 24px;text-align:center">
       <img src="${baseUrl}/email/hikma-mark.png" alt="" width="25" height="44" style="width:25px;height:44px;display:inline-block;border:0;vertical-align:middle;margin:0 6px">
