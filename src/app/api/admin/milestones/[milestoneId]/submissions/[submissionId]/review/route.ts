@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { notifyTeamMembers, NotificationTemplates } from "@/lib/notifications";
+import { dispatchNotification } from "@/lib/notify";
+import { requireAdmin } from "@/lib/notification-auth";
 
 // POST /api/admin/milestones/[milestoneId]/submissions/[submissionId]/review
 // Updates the review status and comment for a submission
@@ -8,10 +10,10 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { milestoneId: string; submissionId: string } }
 ) {
+  if (!requireAdmin(cookies().get("token")?.value)) {
+    return NextResponse.json({ error: "غير مصرح. هذه الخدمة متاحة للمسؤولين فقط." }, { status: 401 });
+  }
   try {
-    // Check if admin is authenticated (this would be implemented with proper auth)
-    // For now, we'll skip this check for development purposes
-
     const { milestoneId, submissionId } = params;
 
     if (!milestoneId || !submissionId) {
@@ -67,23 +69,15 @@ export async function POST(
 
     // Create notifications for team members about the review result
     try {
-      const template = NotificationTemplates.milestoneReviewResult(
-        submissionDetails.milestone.title,
-        reviewStatus as 'accepted' | 'rejected'
-      );
-      
       if (submissionDetails.participant.teamId) {
-        await notifyTeamMembers(
-          submissionDetails.participant.teamId,
-          template.title,
-          template.message,
-          template.type,
-          {
-            relatedEntityType: 'milestone_submission',
-            relatedEntityId: submissionId,
-            actionUrl: template.actionUrl,
-          }
-        );
+        await dispatchNotification({
+          templateKey:
+            reviewStatus === 'accepted' ? 'milestoneReviewAccepted' : 'milestoneReviewRejected',
+          variables: { milestoneTitle: submissionDetails.milestone.title },
+          audience: { kind: 'team', teamId: submissionDetails.participant.teamId },
+          relatedEntityType: 'milestone_submission',
+          relatedEntityId: submissionId,
+        });
       }
     } catch (notificationError) {
       console.error('Error creating milestone review notifications:', notificationError);

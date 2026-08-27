@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
-import { notifyTeamMembers, NotificationTemplates } from '@/lib/notifications'
+import { dispatchNotification, type TemplateVariables } from '@/lib/notify'
+import { requireAdmin } from '@/lib/notification-auth'
+import { generatePassword, credentialVariables, participantDisplayName } from '@/lib/credentials'
 
 // Ensure this route is dynamic
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  if (!requireAdmin(cookies().get('token')?.value)) {
+    return NextResponse.json({ error: 'غير مصرح. هذه الخدمة متاحة للمسؤولين فقط.' }, { status: 401 });
+  }
   try {
     const body = await request.json()
     const { teamId } = body
@@ -38,50 +44,43 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Update team status and create passwords for participants
+    // Approve the team and issue login credentials to every member. Each
+    // member's password is generated here, stored hashed, and delivered ONLY
+    // to that member in their own acceptance email (per-recipient variables).
+    // See mdfiles/acceptance-credentials-email.md.
+    const issued: Array<{ participantId: string; email: string; password: string; name: string }> = []
+    const perRecipient: Record<string, TemplateVariables> = {}
+
     await prisma.$transaction(async (tx) => {
-      // Update team status to approved
       await tx.team.update({
         where: { id: teamId },
         data: { status: 'approved' }
       })
 
-      // Create passwords for all participants using email+123 format
       for (const participant of team.participants) {
-        // Generate password using email prefix + "123"
-        const emailPrefix = participant.email.split('@')[0]
-        const password = `${emailPrefix}123`
-        
-        console.log(`🔐 Generating password for ${participant.email}:`);
-        console.log(`   - Email prefix: "${emailPrefix}"`);
-        console.log(`   - Password: "${password}"`);
-        
+        const password = generatePassword()
         const hashedPassword = await bcrypt.hash(password, 10)
-
-        // Update participant with password
         await tx.participant.update({
           where: { id: participant.id },
           data: { passwordHash: hashedPassword }
         })
-        
-        console.log(`✅ Password created for ${participant.email}`);
+        const name = participantDisplayName(participant)
+        issued.push({ participantId: participant.id, email: participant.email, password, name })
+        perRecipient[participant.id] = credentialVariables({ email: participant.email, password, participantName: name })
+        console.log(`🔐 Credentials issued for ${participant.email}`)
       }
     })
 
-    // Create notification for team members about approval
+    // Notify each member with their own credentials
     try {
-      const template = NotificationTemplates.teamApproval(team.teamName || 'فريقك');
-      await notifyTeamMembers(
-        teamId,
-        template.title,
-        template.message,
-        template.type,
-        {
-          relatedEntityType: 'team',
-          relatedEntityId: teamId,
-          actionUrl: template.actionUrl,
-        }
-      );
+      await dispatchNotification({
+        templateKey: 'teamApproval',
+        variables: { teamName: team.teamName || 'فريقك' },
+        perRecipient,
+        audience: { kind: 'team', teamId },
+        relatedEntityType: 'team',
+        relatedEntityId: teamId,
+      });
     } catch (notificationError) {
       console.error('Error creating approval notification:', notificationError);
       // Don't fail the approval if notification fails
@@ -89,7 +88,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Team approved and accounts created successfully'
+      message: 'Team approved and accounts created successfully',
+      // Returned so the admin can hand credentials over manually if email is
+      // disabled or a delivery fails (same as approve-participant's generatedPassword).
+      credentials: issued.map(({ email, password, name }) => ({ email, password, name })),
     })
   } catch (error) {
     console.error('Error approving team:', error)

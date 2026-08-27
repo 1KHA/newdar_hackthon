@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/notification-auth'
+import { PARTICIPANT_PUBLIC_FIELDS } from '@/lib/participant-fields'
 
 // Ensure this route is dynamic
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
+  if (!requireAdmin(cookies().get('token')?.value)) {
+    return NextResponse.json({ error: 'غير مصرح. هذه الخدمة متاحة للمسؤولين فقط.' }, { status: 401 });
+  }
   try {
     // Get query parameters
     const url = new URL(request.url);
@@ -45,7 +51,7 @@ export async function GET(request: NextRequest) {
           ]
         },
         include: {
-          participants: true
+          participants: { select: PARTICIPANT_PUBLIC_FIELDS }
         },
         orderBy: {
           createdAt: 'desc'
@@ -55,7 +61,7 @@ export async function GET(request: NextRequest) {
       // No search term, return all teams
       teams = await prisma.team.findMany({
         include: {
-          participants: true
+          participants: { select: PARTICIPANT_PUBLIC_FIELDS }
         },
         orderBy: {
           createdAt: 'desc'

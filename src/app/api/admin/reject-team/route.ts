@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
-import { notifyTeamMembers, NotificationTemplates } from '@/lib/notifications'
+import { dispatchNotification } from '@/lib/notify'
+import { requireAdmin } from '@/lib/notification-auth'
 
 // Ensure this route is dynamic
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
+  if (!requireAdmin(cookies().get('token')?.value)) {
+    return NextResponse.json({ error: 'غير مصرح. هذه الخدمة متاحة للمسؤولين فقط.' }, { status: 401 });
+  }
   try {
     const body = await request.json()
     const { teamId } = body
@@ -44,17 +49,13 @@ export async function POST(request: NextRequest) {
 
     // Create notification for team members about rejection
     try {
-      const template = NotificationTemplates.teamRejection(team.teamName || 'فريقك');
-      await notifyTeamMembers(
-        teamId,
-        template.title,
-        template.message,
-        template.type,
-        {
-          relatedEntityType: 'team',
-          relatedEntityId: teamId,
-        }
-      );
+      await dispatchNotification({
+        templateKey: 'teamRejection',
+        variables: { teamName: team.teamName || 'فريقك' },
+        audience: { kind: 'team', teamId },
+        relatedEntityType: 'team',
+        relatedEntityId: teamId,
+      });
     } catch (notificationError) {
       console.error('Error creating rejection notification:', notificationError);
       // Don't fail the rejection if notification fails
