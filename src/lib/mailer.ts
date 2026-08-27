@@ -135,9 +135,9 @@ export function renderEmailHtml(title: string, bodyText: string): string {
   return `<div dir="rtl" lang="ar" style="direction:rtl;text-align:right;font-family:Tahoma,Arial,sans-serif;background:#f4f6f8;padding:24px">
   <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6e2df">
     <div style="background:#ffffff;padding:18px 24px;text-align:center;border-bottom:1px solid #efeae6">
-      <img src="${baseUrl}/logos/03.png" alt="" style="height:34px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
-      <img src="${baseUrl}/logos/02.png" alt="جامعة دار الحكمة" style="height:38px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
       <img src="${baseUrl}/logos/01.png" alt="" style="height:38px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
+      <img src="${baseUrl}/logos/02.png" alt="جامعة دار الحكمة" style="height:38px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
+      <img src="${baseUrl}/logos/03.png" alt="" style="height:34px;display:inline-block;border:0;vertical-align:middle;margin:0 8px">
     </div>
     <div style="background:#620f10;padding:12px 24px;text-align:center">
       <span style="color:#fccd8d;font-size:15px;font-weight:bold">جائزة مايدة محي الدين ناظر للابتكار</span>
