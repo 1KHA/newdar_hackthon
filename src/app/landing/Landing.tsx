@@ -109,7 +109,7 @@ export default function Landing() {
         <section className="dhl-tracks">
           <Icon name="bars" className="dhl-ico-tracks" />
           <h2 className="dhl-sect-title dhl-tracks-title" data-reveal>
-            المسارات <Diamond />
+            <Diamond /> المسارات
           </h2>
           <div className="dhl-track-card dhl-track-1" data-reveal style={{ "--reveal-delay": "100ms" } as React.CSSProperties}>
             <img className="dhl-track-icon" src="/icons/icon03.png" alt="" aria-hidden="true" />
@@ -129,7 +129,7 @@ export default function Landing() {
         <section className="dhl-prizes">
           <Icon name="pinwheel" className="dhl-ico-dark dhl-ico-prizes" />
           <h2 className="dhl-sect-title dhl-prizes-title" data-reveal>
-            الجوائز <Diamond />
+            <Diamond /> الجوائز
           </h2>
           {[
             { cls: "dhl-prize-2", n: "2", title: "المركز الثاني", amount: "70,000", delay: "220ms" },
@@ -160,7 +160,7 @@ export default function Landing() {
         <section className="dhl-conds">
           <Icon name="bars2" className="dhl-ico-dark dhl-ico-conds" />
           <h2 className="dhl-sect-title dhl-conds-title" data-reveal>
-            شروط قبول المشاريع في هاكاثون الابتكار <Diamond />
+            <Diamond /> شروط قبول المشاريع في هاكاثون الابتكار
           </h2>
           {[
             { cls: "dhl-cond-1", text: "أن تكون المشاركة طالبة في مرحلة البكالوريوس أو الماجستير في إحدى الجامعات السعودية." },
@@ -182,7 +182,7 @@ export default function Landing() {
         <section className="dhl-journey">
           <Icon name="cube" className="dhl-ico-journey" />
           <h2 className="dhl-sect-title dhl-journey-title" data-reveal>
-           رحلة المشاركة<Diamond />
+            <Diamond /> رحلة المشاركة
           </h2>
           {[
             { cls: "dhl-jcard-1", n: "1", title: "الاستقطاب والتسجيل", note: "", dates: <>1 - 24 سبتمبر<br />2026 م</> },
@@ -205,7 +205,7 @@ export default function Landing() {
         {/* ===== Bottom band ===== */}
         <section className="dhl-bottom">
           <h2 className="dhl-bottom-text" data-reveal>
-            المشاريع الفائزة في النسخة الثالثة من جائزة مايدة محي الدين ناظر للابتكار <Diamond />
+            <Diamond /> المشاريع الفائزة في النسخة الثالثة من جائزة مايدة محي الدين ناظر للابتكار
           </h2>
         </section>
 
