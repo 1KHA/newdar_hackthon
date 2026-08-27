@@ -6,7 +6,12 @@ logos, ornaments, calligraphy mark, and small icons are cropped image assets.
 
 ## Route
 
-Runs at **`/landing`** (e.g. `http://localhost:3000/landing`).
+This folder **is the site's home page**: `src/app/page.tsx` renders `<Landing />` at `/`
+(that file also carries the page metadata and the Event structured data).
+The folder keeps its own route as well, so it still answers at **`/landing`** — handy for
+testing and for dropping the folder into another project unchanged.
+
+The previous image-based home page was moved to `src/app/legacy-home/` (noindex, unlinked).
 
 ## Folder contents (fully self-contained)
 
