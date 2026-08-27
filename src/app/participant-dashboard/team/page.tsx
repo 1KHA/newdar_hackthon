@@ -362,159 +362,88 @@ export default function TeamManagementPage() {
 
         <TabsContent value="members" className="mt-6">
           <Card>
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <CardTitle>أعضاء الفريق</CardTitle>
-        </CardHeader>
-        <CardContent className="p-2 sm:p-6">
-          {/* Mobile Card View */}
-          <div className="block md:hidden space-y-4">
-            {teamData.participants.map((participant) => {
-              const canDelete = currentUser.isLeader && currentUser.id !== participant.id;
-              
-              return (
-                <Card key={participant.id} className="overflow-hidden">
-                  <CardContent className="p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h3 className="font-semibold text-lg">{participant.fullName}</h3>
-                        <p className="text-sm text-muted-foreground">{participant.email}</p>
-                      </div>
-                      <div className="flex flex-col items-end gap-1">
-                        {participant.isLeader && (
-                          <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">قائد</span>
-                        )}
-                        <span className={`px-2 py-1 rounded-full text-xs ${participant.canAttend ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {participant.canAttend ? 'يمكنه الحضور' : 'لا يمكنه الحضور'}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-3 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">رقم الهوية:</span>
-                        <p>{participant.nationalId}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">رقم الهاتف:</span>
-                        <p>{participant.phoneNumber}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">الجنسية:</span>
-                        <p>{participant.nationality}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">الإقامة:</span>
-                        <p>{participant.residence}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">المؤهل:</span>
-                        <p>{participant.education}</p>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">التخصص:</span>
-                        <p>{participant.major}</p>
-                      </div>
-                    </div>
-                    
-                    {canDelete && (
-                      <div className="mt-4 flex justify-end">
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => {
-                            setSelectedParticipant(participant);
-                            setIsDeleteModalOpen(true);
-                          }}
-                          className="text-xs"
-                        >
-                          <Trash className="h-3 w-3 mr-1" />
-                          إزالة العضو
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-          
-          {/* Desktop Table View */}
-          <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0 rounded-lg border">
-            <div className="w-full overflow-x-auto">
-              <table className="w-full min-w-[1000px]">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">الاسم الكامل</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">البريد الإلكتروني</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">رقم الهوية</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">تاريخ الميلاد</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">رقم الهاتف</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">المؤهل</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">الجامعة</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">التخصص</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">الحالة الوظيفية</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">الجنسية</th>
-                  <th className="p-2 sm:p-4 text-right font-medium text-muted-foreground">الإقامة</th>
-                  <th className="p-2 sm:p-4 text-center font-medium text-muted-foreground">يمكنه الحضور</th>
-                  <th className="p-2 sm:p-4 text-center font-medium text-muted-foreground">قائد</th>
-                  <th className="p-2 sm:p-4 text-center font-medium text-muted-foreground">الإجراءات</th>
-                </tr>
-              </thead>
-              <tbody>
+            <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <CardTitle>أعضاء الفريق</CardTitle>
+                <CardDescription>{teamData.participants.length} من الأعضاء</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6">
+              {/* One responsive card per member: 1 column by default, 2 on xl, 3 on 2xl
+                  (the dashboard sidebar takes 256px, so breakpoints are set on the
+                  remaining content width, not the viewport). */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
                 {teamData.participants.map((participant) => {
-                  const canEdit = currentUser.isLeader;
                   const canDelete = currentUser.isLeader && currentUser.id !== participant.id;
+                  const details: [string, string][] = [
+                    [fieldLabels.nationalId, participant.nationalId],
+                    [fieldLabels.dob, participant.dob],
+                    [fieldLabels.phoneNumber, participant.phoneNumber],
+                    [fieldLabels.education, participant.education],
+                    [fieldLabels.university, participant.university],
+                    [fieldLabels.major, participant.major],
+                    [fieldLabels.employmentStatus, participant.employmentStatus],
+                    [fieldLabels.nationality, participant.nationality],
+                    [fieldLabels.residence, participant.residence],
+                  ];
 
                   return (
-                    <tr key={participant.id} className="border-t hover:bg-muted/10 transition-colors">
-                      <td className="p-2 sm:p-4 text-right">{participant.fullName}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.email}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.nationalId}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.dob}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.phoneNumber}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.education}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.university}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.major}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.employmentStatus}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.nationality}</td>
-                      <td className="p-2 sm:p-4 text-right">{participant.residence}</td>
-                      <td className="p-2 sm:p-4 text-center">
-                        <span className={`px-2 py-1 rounded-full text-xs ${participant.canAttend ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                          {participant.canAttend ? 'نعم' : 'لا'}
-                        </span>
-                      </td>
-                      <td className="p-2 sm:p-4 text-center">
-                        {participant.isLeader && (
-                          <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">قائد</span>
-                        )}
-                      </td>
-                      <td className="p-2 sm:p-4">
-                        <div className="flex gap-2 justify-center">
-                          {canDelete && (
+                    <Card key={participant.id} className="min-w-0 overflow-hidden">
+                      <CardContent className="p-4 sm:p-5">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <h3 className="font-semibold text-base sm:text-lg leading-snug break-words">
+                              {participant.fullName}
+                            </h3>
+                            <a
+                              href={`mailto:${participant.email}`}
+                              className="block text-sm text-muted-foreground break-all text-right hover:underline"
+                              dir="ltr"
+                            >
+                              {participant.email}
+                            </a>
+                          </div>
+                          <div className="flex flex-wrap justify-end gap-1 shrink-0">
+                            {participant.isLeader && (
+                              <span className="px-2 py-1 rounded-full text-xs whitespace-nowrap bg-blue-100 text-blue-800">قائد</span>
+                            )}
+                            <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${participant.canAttend ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                              {participant.canAttend ? 'يمكنه الحضور' : 'لا يمكنه الحضور'}
+                            </span>
+                          </div>
+                        </div>
+
+                        <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                          {details.map(([label, value]) => (
+                            <div key={label} className="min-w-0">
+                              <dt className="text-xs text-muted-foreground">{label}</dt>
+                              <dd className="font-medium break-words">{value || '—'}</dd>
+                            </div>
+                          ))}
+                        </dl>
+
+                        {canDelete && (
+                          <div className="mt-4 pt-4 border-t flex justify-end">
                             <Button
-                              variant="ghost"
-                              size="icon"
-                              title="حذف"
+                              variant="destructive"
+                              size="sm"
                               onClick={() => {
                                 setSelectedParticipant(participant);
                                 setIsDeleteModalOpen(true);
                               }}
-                              className="text-red-500 hover:text-red-600"
                             >
-                              <Trash className="h-4 w-4" />
+                              <Trash className="h-3.5 w-3.5 ml-1" />
+                              إزالة العضو
                             </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
                   );
                 })}
-              </tbody>
-            </table>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 

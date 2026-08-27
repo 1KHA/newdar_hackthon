@@ -65,9 +65,11 @@ export default function LoginPage() {
     setIsLoading(true)
 
     try {
-      const success = await login(formData.email, formData.password)
+      // login() returns { success, error } — not a boolean. Reading it as one
+      // made every attempt look successful, including a wrong password.
+      const result = await login(formData.email, formData.password)
 
-      if (success) {
+      if (result.success) {
         toast({
           title: "نجح",
           description: "تم تسجيل الدخول بنجاح!",
@@ -76,7 +78,7 @@ export default function LoginPage() {
         // The auth context will update the user state
         // The useEffect above will handle the redirect based on user role
       } else {
-        setErrorMessage("بيانات الدخول غير صحيحة")
+        setErrorMessage(result.error || "بيانات الدخول غير صحيحة")
       }
     } catch (error) {
       console.error('Login error:', error)
