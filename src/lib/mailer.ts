@@ -142,6 +142,7 @@ export function renderEmailHtml(title: string, bodyText: string): string {
     <div style="background:#620f10;padding:12px 24px;text-align:center">
       <span style="color:#fccd8d;font-size:15px;font-weight:bold">جائزة مايدة محي الدين ناظر للابتكار</span>
       <span style="color:#ffffff;font-size:13px"> — هاكاثون الابتكار</span>
+      <img src="${baseUrl}/hikma03.png" alt="" style="height:44px;display:inline-block;border:0;vertical-align:middle;margin:0 10px">
     </div>
     <div style="padding:24px">
       <h2 style="margin:0 0 12px;font-size:16px;color:#620f10">${titleHtml}</h2>
