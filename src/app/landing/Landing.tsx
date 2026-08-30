@@ -7,6 +7,7 @@ import SiteHeader from "./components/SiteHeader";
 import SiteFooter from "./components/SiteFooter";
 import Icon from "./components/Icon";
 import RevealObserver from "./components/RevealObserver";
+import VotePrizeInfo from "./components/VotePrizeInfo";
 
 import heroMark from "./assets/hero-mark.png";
 import glow from "./assets/glow.png";
@@ -156,6 +157,7 @@ export default function Landing() {
               <img className="dhl-prize-sar" src={sarPrize.src} alt="ريال سعودي" />
               <span>5,000</span>
             </div>
+            <VotePrizeInfo />
           </div>
         </section>
 

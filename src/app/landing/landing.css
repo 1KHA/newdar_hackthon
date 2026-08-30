@@ -717,7 +717,7 @@
 
 .dhl-prizes {
   position: relative;
-  height: calc(2460 * var(--u));
+  height: calc(2360 * var(--u));
   background: #ffffff;
 }
 
@@ -784,6 +784,7 @@
   margin-left: calc(-76 * var(--u));
   border-radius: 50%;
   border: calc(8 * var(--u)) solid #ffffff;
+  background: #fafaf9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -799,13 +800,6 @@
   top: calc(-88 * var(--u));
   margin-left: calc(-88 * var(--u));
   font-size: calc(96 * var(--u));
-  background: linear-gradient(160deg, #f8d77a 0%, #d9a01c 100%);
-}
-.dhl-prize-2 .dhl-prize-badge {
-  background: linear-gradient(160deg, #f1f3f6 0%, #b3bcc8 100%);
-}
-.dhl-prize-3 .dhl-prize-badge {
-  background: linear-gradient(160deg, #eec49b 0%, #c2833f 100%);
 }
 
 .dhl-prize-name {
@@ -844,20 +838,17 @@
    podium card, centred beneath it, with the site's blue diamond in the badge. */
 .dhl-prize-vote {
   --pz-amount: calc(166 * var(--u));
+  --pz-amount: calc(190 * var(--u));
   left: calc(285 * var(--u));
   top: calc(1720 * var(--u));
   width: calc(3272 * var(--u));
-  height: calc(560 * var(--u));
+  height: calc(460 * var(--u));
   border-radius: calc(14 * var(--u));
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(48 * var(--u));
-  padding: calc(120 * var(--u)) calc(100 * var(--u)) calc(80 * var(--u));
-}
-.dhl-prize-vote .dhl-prize-badge {
-  background: linear-gradient(160deg, #ffffff 0%, #d9eef9 100%);
+  gap: calc(140 * var(--u));
+  padding: calc(90 * var(--u)) calc(100 * var(--u)) calc(60 * var(--u));
 }
 .dhl-prize-vote-diamond {
   width: calc(52 * var(--u));
@@ -866,8 +857,9 @@
 .dhl-prize-vote-name {
   color: var(--maroon);
   font-weight: 700;
-  font-size: calc(150 * var(--u));
+  font-size: calc(180 * var(--u));
   line-height: 1;
+  white-space: nowrap;
 }
 .dhl-prize-vote-amount {
   display: flex;
@@ -877,6 +869,188 @@
   font-weight: 700;
   font-size: var(--pz-amount);
   line-height: 1;
+}
+
+/* "اكتشف أكثر" — pinned to the card's inline end (left in RTL) */
+.dhl-vote-btn {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: calc(90 * var(--u));
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: calc(20 * var(--u));
+  padding: calc(34 * var(--u)) calc(64 * var(--u));
+  border: 0;
+  border-radius: 999px;
+  background: var(--maroon);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  font-size: calc(76 * var(--u));
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 calc(18 * var(--u)) calc(40 * var(--u)) calc(-14 * var(--u)) rgba(98, 15, 16, 0.55);
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.dhl-vote-btn svg {
+  font-size: 0.9em;
+  transition: transform 0.25s ease;
+}
+.dhl-vote-btn:hover {
+  background: #7a1a1b;
+  transform: translateY(-50%) scale(1.04);
+  box-shadow: 0 calc(24 * var(--u)) calc(48 * var(--u)) calc(-14 * var(--u)) rgba(98, 15, 16, 0.6);
+}
+.dhl-vote-btn:hover svg {
+  transform: translateX(calc(-6 * var(--u)));
+}
+.dhl-vote-btn:focus-visible {
+  outline: calc(6 * var(--u)) solid var(--blue);
+  outline-offset: calc(4 * var(--u));
+}
+
+/* dialog (portalled to <body>, so plain px units and explicit colours) */
+.dhl-vd {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(30, 6, 6, 0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-family: "DHLSomar", "Somar-Bold", sans-serif;
+  animation: dhl-lb-in 0.25s ease both;
+}
+.dhl-vd-panel {
+  position: relative;
+  width: min(100%, 640px);
+  padding: 3.25rem 2.5rem 2.25rem;
+  border-radius: 28px;
+  background: #ffffff;
+  text-align: center;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+  animation: dhl-lb-pop 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  overflow: hidden;
+}
+/* a faint sweep of the brand maroon across the top of the panel */
+.dhl-vd-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 8px;
+  background: linear-gradient(90deg, #fff6eb, #83bae4, #80191a, #f9d69f);
+}
+.dhl-vd-close {
+  position: absolute;
+  top: 1rem;
+  inset-inline-start: 1rem;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(98, 15, 16, 0.08);
+  color: #620f10;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.dhl-vd-close:hover {
+  background: rgba(98, 15, 16, 0.16);
+}
+.dhl-vd-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #fafaf9;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+}
+.dhl-vd-diamond {
+  width: 28px;
+  height: 28px;
+  background: #50c2e8;
+  transform: rotate(45deg);
+}
+.dhl-vd-title {
+  margin: 0;
+  color: #620f10;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.2;
+}
+.dhl-vd-amount {
+  margin: 0.35rem 0 1.5rem;
+  color: #6baee0;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+}
+.dhl-vd-text {
+  margin: 0;
+  color: #494b4c;
+  font-weight: 500;
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 2;
+}
+.dhl-vd-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0 0.35em;
+  padding: 0.2em 0.9em;
+  vertical-align: baseline;
+  border: 0;
+  border-radius: 999px;
+  background: #fccd8d;
+  color: #620f10;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.dhl-vd-tag:hover {
+  background: #fbc07a;
+  transform: translateY(-1px);
+}
+.dhl-vd-tag.is-copied {
+  background: #d8f3e4;
+  color: #1c6b3e;
+}
+.dhl-vd-tag svg {
+  font-size: 0.85em;
+}
+.dhl-vd-hint {
+  margin: 1.25rem 0 0;
+  color: #8a8c8e;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+@media (max-width: 640px) {
+  .dhl-vd-panel {
+    padding: 3rem 1.25rem 1.75rem;
+    border-radius: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dhl-vd,
+  .dhl-vd-panel {
+    animation: none;
+  }
+  .dhl-vote-btn,
+  .dhl-vote-btn svg,
+  .dhl-vd-tag {
+    transition: none;
+  }
 }
 
 /* ---------- target ---------- */
