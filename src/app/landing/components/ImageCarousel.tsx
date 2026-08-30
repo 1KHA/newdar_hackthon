@@ -36,8 +36,8 @@ const EDITION_TWO: WinnerSlide[] = [
 ];
 
 const EDITIONS: WinnerEdition[] = [
-  { id: "third", label: " هاكثون الابتكار ١", slides: EDITION_THREE },
-  { id: "second", label: " هاكثون الابتكار ٢", ratio: 1.02, slides: EDITION_TWO },
+  { id: "third", label: " هاكثون الابتكار 2", slides: EDITION_THREE },
+  { id: "second", label: " هاكثون الابتكار 1", ratio: 1.02, slides: EDITION_TWO },
 ];
 
 interface ImageCarouselProps {
