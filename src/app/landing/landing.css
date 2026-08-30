@@ -717,7 +717,7 @@
 
 .dhl-prizes {
   position: relative;
-  height: calc(2280 * var(--u));
+  height: calc(2460 * var(--u));
   background: #ffffff;
 }
 
@@ -844,17 +844,17 @@
    podium card, centred beneath it, with the site's blue diamond in the badge. */
 .dhl-prize-vote {
   --pz-amount: calc(166 * var(--u));
-  left: calc(1384 * var(--u));
+  left: calc(1300 * var(--u));
   top: calc(1720 * var(--u));
-  width: calc(1072 * var(--u));
-  height: calc(400 * var(--u));
+  width: calc(1240 * var(--u));
+  height: calc(560 * var(--u));
   border-radius: calc(14 * var(--u));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(28 * var(--u));
-  padding-top: calc(40 * var(--u));
+  gap: calc(48 * var(--u));
+  padding: calc(120 * var(--u)) calc(100 * var(--u)) calc(80 * var(--u));
 }
 .dhl-prize-vote .dhl-prize-badge {
   background: linear-gradient(160deg, #ffffff 0%, #d9eef9 100%);
