@@ -844,9 +844,9 @@
    podium card, centred beneath it, with the site's blue diamond in the badge. */
 .dhl-prize-vote {
   --pz-amount: calc(166 * var(--u));
-  left: calc(1300 * var(--u));
+  left: calc(285 * var(--u));
   top: calc(1720 * var(--u));
-  width: calc(1240 * var(--u));
+  width: calc(3272 * var(--u));
   height: calc(560 * var(--u));
   border-radius: calc(14 * var(--u));
   display: flex;
