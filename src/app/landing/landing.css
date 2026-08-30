@@ -1923,7 +1923,7 @@
 .dhl-footer {
   position: relative;
   width: 100%;
-  height: calc(538 * var(--u));
+  height: calc(600 * var(--u));
   background: var(--maroon);
   overflow: hidden;
 }
@@ -1988,6 +1988,28 @@
 .dhl-f-phone {
   position: absolute;
   top: calc(311 * var(--u));
+  right: calc(1077 * var(--u));
+  color: #ffffff;
+  font-family: "DHLSomarLatin", "DHLSomar", sans-serif;
+  font-weight: 700;
+  font-size: calc(60 * var(--u));
+  line-height: calc(76 * var(--u));
+  direction: ltr;
+  text-decoration: none;
+}
+
+/* WhatsApp row, same rhythm as the mail/phone rows above it */
+.dhl-f-wa-icon {
+  position: absolute;
+  top: calc(418 * var(--u));
+  right: calc(946 * var(--u));
+  width: calc(66 * var(--u));
+  height: calc(66 * var(--u));
+  color: #ffffff;
+}
+.dhl-f-wa {
+  position: absolute;
+  top: calc(413 * var(--u));
   right: calc(1077 * var(--u));
   color: #ffffff;
   font-family: "DHLSomarLatin", "DHLSomar", sans-serif;
