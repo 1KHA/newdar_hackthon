@@ -19,7 +19,7 @@ export default function SiteFooter({ standalone = false }: { standalone?: boolea
       <img className="dhl-f-mail-icon" src={iconMail.src} alt="" aria-hidden="true" />
       <a className="dhl-f-email" href="mailto:wmvc@wadimakkah.sa">wmvc@wadimakkah.sa</a>
       <img className="dhl-f-phone-icon" src={iconPhone.src} alt="" aria-hidden="true" />
-      <a className="dhl-f-phone" href="tel:+966545671998">966545671998</a>
+      <a className="dhl-f-phone" href="tel:+9665--------">9665-------</a>
     </footer>
   );
   if (!standalone) return footer;

@@ -7,9 +7,9 @@ async function main() {
   console.log('Starting seeding...');
 
   // Create admin accounts
-  const adminPassword1 = await bcrypt.hash('987Admin@', 10);
-  const adminPassword2 = await bcrypt.hash('987Admin@', 10);
-  const adminPassword3 = await bcrypt.hash('TemporaryPassword123', 10); // Temporary password for daralhekma Dar123@alhekma
+  const adminPassword1 = await bcrypt.hash('Admin@3300', 10);
+  const adminPassword2 = await bcrypt.hash('Admin@3300', 10);
+  const adminPassword3 = await bcrypt.hash('Admin@3300', 10); // Temporary password for daralhekma Dar123@alhekma
 
   const admin1 = await prisma.admin.upsert({
     where: { username: 'admin1' },

@@ -89,9 +89,9 @@ export default function Landing() {
 
         {/* ===== Ready for the challenge ===== */}
         <section className="dhl-ready">
-          <h2 className="dhl-ready-head" data-reveal>جاهز للتحدي؟</h2>
+          <h2 className="dhl-ready-head" data-reveal>جاهزة للتحدي؟</h2>
           <p className="dhl-ready-par" data-reveal style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
-            سجل الآن وكن جزءًا من رحلة الابتكار لتطوير حلول
+            سجلي الآن وكوني جزءًا من رحلة الابتكار لتطوير حلول
             <br />
             وضمان جـودة الحيـاة
           </p>
