@@ -145,6 +145,18 @@ export default function Landing() {
               </div>
             </div>
           ))}
+
+          {/* Audience-vote award: a standalone (unranked) card centred under the podium */}
+          <div className="dhl-prize-card dhl-prize-vote" data-reveal style={{ "--reveal-delay": "460ms" } as React.CSSProperties}>
+            <span className="dhl-prize-badge" aria-hidden="true">
+              <Diamond className="dhl-prize-vote-diamond" />
+            </span>
+            <div className="dhl-prize-vote-name">جائزة تصويت الجمهور</div>
+            <div className="dhl-prize-vote-amount" dir="ltr">
+              <img className="dhl-prize-sar" src={sarPrize.src} alt="ريال سعودي" />
+              <span>5,000</span>
+            </div>
+          </div>
         </section>
 
         {/* ===== Target audience ===== */}

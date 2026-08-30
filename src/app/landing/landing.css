@@ -717,7 +717,7 @@
 
 .dhl-prizes {
   position: relative;
-  height: calc(1780 * var(--u));
+  height: calc(2280 * var(--u));
   background: #ffffff;
 }
 
@@ -838,6 +838,45 @@
 .dhl-prize-sar {
   width: calc(0.53 * var(--pz-amount));
   height: calc(0.59 * var(--pz-amount));
+}
+
+/* Audience-vote award: unranked, so no number — a compact card the width of a
+   podium card, centred beneath it, with the site's blue diamond in the badge. */
+.dhl-prize-vote {
+  --pz-amount: calc(166 * var(--u));
+  left: calc(1384 * var(--u));
+  top: calc(1720 * var(--u));
+  width: calc(1072 * var(--u));
+  height: calc(400 * var(--u));
+  border-radius: calc(14 * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(28 * var(--u));
+  padding-top: calc(40 * var(--u));
+}
+.dhl-prize-vote .dhl-prize-badge {
+  background: linear-gradient(160deg, #ffffff 0%, #d9eef9 100%);
+}
+.dhl-prize-vote-diamond {
+  width: calc(52 * var(--u));
+  height: calc(52 * var(--u));
+}
+.dhl-prize-vote-name {
+  color: var(--maroon);
+  font-weight: 700;
+  font-size: calc(150 * var(--u));
+  line-height: 1;
+}
+.dhl-prize-vote-amount {
+  display: flex;
+  align-items: center;
+  gap: calc(14 * var(--u));
+  color: var(--prize-blue);
+  font-weight: 700;
+  font-size: var(--pz-amount);
+  line-height: 1;
 }
 
 /* ---------- target ---------- */
