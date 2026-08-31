@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Checkbox } from '@/../../components/ui/checkbox'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/../../components/ui/use-toast'
@@ -55,6 +56,91 @@ const initialFormState = {
 }
 
 type FormState = typeof initialFormState;
+
+/* Project-acceptance rules shown next to the idea-description field, so
+   applicants read them before writing their idea. Display-only. */
+const IDEA_RULES = [
+  {
+    title: 'وضوح المشكلة وابتكارية الحل',
+    text: 'تحديد المشكلة المراد حلها، مع بيان ما إذا كانت جديدة أو سبق معالجتها، واشتراط أن يكون الحل المقترح مبتكراً.',
+  },
+  {
+    title: 'الارتباط بالمسارات وقابلية التطبيق',
+    text: 'ارتباط الفكرة مباشرةً بتحديات مسارات الهاكاثون المحددة، وقابليتها للتطبيق الفعلي والعملي على أرض الواقع.',
+  },
+  {
+    title: 'أصالة الفكرة',
+    text: 'ألا تكون الفكرة قد سبق لها الفوز بجائزة مايدة محي الدين ناظر للابتكار في الدورات السابقة.',
+  },
+  {
+    title: 'ضوابط المشاركة',
+    text: 'يُمنع مشاركة روابط الجلسات الإرشادية الافتراضية مع غير المقبولين في الهاكاثون.',
+  },
+]
+
+function IdeaRulesDialog() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-full border border-[#620F10]/25 bg-[#620F10]/5 px-3 py-1.5 text-sm font-medium text-[#620F10] transition-colors hover:bg-[#620F10]/10"
+        style={{ fontFamily: 'Somar-Medium, Arial, sans-serif' }}
+      >
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5M12 8v.01" />
+        </svg>
+        شروط قبول المشاريع
+      </button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent dir="rtl" className="max-w-[95vw] sm:max-w-xl p-0 overflow-hidden">
+          <div className="h-2 w-full bg-gradient-to-l from-[#fff6eb] via-[#83bae4] to-[#80191a]" />
+          <div className="p-5 sm:p-7">
+            <DialogHeader className="text-right sm:text-right">
+              <DialogTitle className="text-xl sm:text-2xl" style={{ color: '#620F10', fontFamily: 'Somar-Bold, Arial, sans-serif' }}>
+                شروط قبول المشاريع في هاكاثون الابتكار
+              </DialogTitle>
+              <DialogDescription style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}>
+                اطلعي على هذه الشروط قبل كتابة فكرتك
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="mt-4 space-y-3 max-h-[60vh] overflow-y-auto pl-1">
+              {IDEA_RULES.map((rule, i) => (
+                <div key={rule.title} className="flex items-start gap-3 rounded-xl border-2 border-gray-100 bg-gray-50/60 p-4">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#620F10] text-sm font-bold text-white">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="font-semibold" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
+                      {rule.title}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600" style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}>
+                      {rule.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button
+              type="button"
+              onClick={() => setOpen(false)}
+              className="mt-5 w-full bg-[#620F10] hover:bg-[#7a1a1b]"
+              style={{ fontFamily: 'Somar-Medium, Arial, sans-serif' }}
+            >
+              فهمت، لنبدأ
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
 
 export default function RegisterTeamPage() {
   const router = useRouter()
@@ -584,10 +670,13 @@ export default function RegisterTeamPage() {
                   </div>
 
                   <div>
-                    <Label htmlFor="idea-description" className="text-base font-medium mb-2 block" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
-                      صف الفكرة
-                    </Label>
-                    <Textarea 
+                    <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                      <Label htmlFor="idea-description" className="text-base font-medium" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
+                        صف الفكرة
+                      </Label>
+                      <IdeaRulesDialog />
+                    </div>
+                    <Textarea
                       id="idea-description" 
                       required 
                       value={formState.ideaDescription} 

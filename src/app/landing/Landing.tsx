@@ -113,12 +113,12 @@ export default function Landing() {
             <Diamond /> المسارات
           </h2>
           <div className="dhl-track-card dhl-track-1" data-reveal style={{ "--reveal-delay": "100ms" } as React.CSSProperties}>
-            <img className="dhl-track-icon" src="/icons/icon03.png" alt="" aria-hidden="true" />
-            <p>تعزيز الدمج المجتمعي<br />لكبار السن والمكفوفين</p>
-          </div>
-          <div className="dhl-track-card dhl-track-2" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
             <img className="dhl-track-icon" src="/icons/icon02.png" alt="" aria-hidden="true" />
             <p>إثراء تجربة ضيوف الرحمن<br />في المدن المقدسة</p>
+          </div>
+          <div className="dhl-track-card dhl-track-2" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
+            <img className="dhl-track-icon" src="/icons/icon03.png" alt="" aria-hidden="true" />
+            <p>تعزيز الدمج المجتمعي<br />لكبار السن والمكفوفين</p>
           </div>
           <div className="dhl-track-card dhl-track-3" data-reveal style={{ "--reveal-delay": "340ms" } as React.CSSProperties}>
             <img className="dhl-track-icon" src="/icons/icon01.png" alt="" aria-hidden="true" />
