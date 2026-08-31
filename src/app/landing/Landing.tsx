@@ -92,9 +92,9 @@ export default function Landing() {
         <section className="dhl-ready">
           <h2 className="dhl-ready-head" data-reveal>جاهزة للتحدي؟</h2>
           <p className="dhl-ready-par" data-reveal style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
-            سجلي الآن وكوني جزءًا من رحلة الابتكار لتطوير حلول
+            سجلي الآن وكوني جزءًا من رحلة الابتكار نحو تطوير حلول
             <br />
-            وضمان جـودة الحيـاة
+            مبتكرة تسهم في تعزيز جودة الحياة.
           </p>
           <a className="dhl-ready-btn" href={REGISTER_URL} data-reveal style={{ "--reveal-delay": "240ms" } as React.CSSProperties}>سجل الآن</a>
 
