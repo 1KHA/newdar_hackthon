@@ -11,7 +11,7 @@ export default function SiteHeader({ standalone = false }: { standalone?: boolea
       <div className="dhl-logos">
         <img src="/logos/03.png" width={2196} height={982} alt="هيئة تنمية البحث والتطوير والابتكار" />
         <img src="/logos/02.png" width={792} height={792} alt="جامعة دار الحكمة" />
-        <img src="/logos/01.png" width={678} height={953} alt="مؤسسة صالح عبدالله كامل الإنسانية" />
+        <img src="/logos/logo011.webp" width={512} height={512} alt="مؤسسة صالح عبدالله كامل الإنسانية" />
       </div>
     </header>
   );
