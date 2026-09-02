@@ -15,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/../../components/ui/use-toast'
 import Loader from '@/components/ui/loader'
 import SiteHeader from '@/app/landing/components/SiteHeader'
+import { HACKATHON_TRACKS } from '@/lib/tracks'
 import SiteFooter from '@/app/landing/components/SiteFooter'
 
 interface Participant {
@@ -633,15 +634,11 @@ export default function RegisterTeamPage() {
                         <SelectValue placeholder="اختر المسار..." />
                       </SelectTrigger>
                       <SelectContent className="text-right" dir="rtl">
-                        <SelectItem value="تعزيز الدمج المجتمعي لكبار السن والمكفوفين" className="text-lg py-3 text-right" style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}>
-                          تعزيز الدمج المجتمعي لكبار السن والمكفوفين
-                        </SelectItem>
-                        <SelectItem value="إثراء تجربة ضيوف الرحمن في المدن المقدسة" className="text-lg py-3 text-right" style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}>
-                          إثراء تجربة ضيوف الرحمن في المدن المقدسة
-                        </SelectItem>
-                        <SelectItem value="الحلول الاجتماعية المستدامة" className="text-lg py-3 text-right" style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}>
-                          الحلول الاجتماعية المستدامة
-                        </SelectItem>
+                        {HACKATHON_TRACKS.map((track) => (
+                          <SelectItem key={track} value={track} className="text-lg py-3 text-right" style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}>
+                            {track}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>

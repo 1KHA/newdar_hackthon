@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { HACKATHON_TRACKS } from '@/lib/tracks';
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -534,13 +535,6 @@ export default function TeamsPage() {
     }
   };
 
-  // Static list of Arabic tracks as requested
-  const ARABIC_TRACKS = [
-    "إحياء اللغة العربية بحلول رقمية مبتكرة",
-    "تحسين جودة الحياة لكبار السن والمكفوفين",
-    "تطوير كفاءة العاملين بقطاع السياحة الدينية (الحج والعمرة)"
-  ];
-
   // Reset all filters
   const resetFilters = () => {
     setStatusFilter([]);
@@ -934,7 +928,7 @@ export default function TeamsPage() {
           {/* Teams per Track */}
           <h3 className="text-lg font-semibold mb-4">الفرق حسب المسار</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {ARABIC_TRACKS.map(track => (
+            {HACKATHON_TRACKS.map(track => (
               <div key={track} className="bg-muted p-4 rounded-lg text-center">
                 <h3 className="text-2xl font-bold">
                   {teams.filter(team => team.hackathonTrack === track).length}
@@ -1122,7 +1116,7 @@ export default function TeamsPage() {
                       className="w-full rounded-md border border-input p-2"
                     >
                       <option value="">اختر المسار</option>
-                      {ARABIC_TRACKS.map(track => (
+                      {HACKATHON_TRACKS.map(track => (
                         <option key={track} value={track}>{track}</option>
                       ))}
                     </select>
@@ -1377,7 +1371,7 @@ export default function TeamsPage() {
                 className="w-full rounded-md border border-input bg-background px-3 py-2 text-right"
               >
                 <option value="">جميع المسارات</option>
-                {ARABIC_TRACKS.map((track) => (
+                {HACKATHON_TRACKS.map((track) => (
                   <option key={track} value={track}>
                     {track}
                   </option>

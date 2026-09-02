@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { HACKATHON_TRACKS } from '@/lib/tracks';
 import {
   Dialog,
   DialogContent,
@@ -257,13 +258,6 @@ export default function AutoTeamCreationModal({
     return Array.from(uniqueUniversities).sort();
   }, [participants]);
 
-  // Static list of Arabic tracks
-  const ARABIC_TRACKS = [
-    "إحياء اللغة العربية بحلول رقمية مبتكرة",
-    "تحسين جودة الحياة لكبار السن والمكفوفين",
-    "تطوير كفاءة العاملين بقطاع السياحة الدينية (الحج والعمرة)"
-  ];
-
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
@@ -402,7 +396,7 @@ export default function AutoTeamCreationModal({
                   <SelectValue placeholder="اختر المسار" />
                 </SelectTrigger>
                 <SelectContent>
-                  {ARABIC_TRACKS.map((track) => (
+                  {HACKATHON_TRACKS.map((track) => (
                     <SelectItem key={track} value={track}>
                       {track}
                     </SelectItem>

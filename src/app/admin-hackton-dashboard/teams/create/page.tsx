@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { HACKATHON_TRACKS } from '@/lib/tracks'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -48,6 +49,7 @@ const initialParticipantState: Participant = {
 
 const initialFormState = {
   teamName: '',
+  hackathonTrack: '',
   challenge: '',
   challengeReason: '',
   ideaName: '',
@@ -120,6 +122,11 @@ export default function AdminCreateTeamPage() {
         }
     });
     
+    // The API branches on these: without them an admin-created team was posted
+    // as an individual registration and rejected.
+    formData.set('registrationType', 'team');
+    formData.set('isTeamRegistration', 'true');
+
     // Manually append the actual members array based on memberCount
     formData.set('members', JSON.stringify(formState.members.slice(0, formState.memberCount)));
 
@@ -252,16 +259,24 @@ export default function AdminCreateTeamPage() {
                     </div>
 
                     <div>
-                      <Label>اختر أحد التحديات الأساسية</Label>
-                      <Select required onValueChange={(value) => handleStateChange('challenge', value)} value={formState.challenge}>
+                      <Label>المسار</Label>
+                      <Select
+                        required
+                        value={formState.hackathonTrack}
+                        onValueChange={(value) => {
+                          // `challenge` is the legacy mirror of the track; the API
+                          // stores both, so keep them identical here too.
+                          handleStateChange('hackathonTrack', value)
+                          handleStateChange('challenge', value)
+                        }}
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder="اختر تحدي..." />
+                          <SelectValue placeholder="اختر المسار..." />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="smart-infrastructure">تحديات البنية التحتية الذكية</SelectItem>
-                          <SelectItem value="environmental">تحديات بيئية</SelectItem>
-                          <SelectItem value="crowd">تحديات الحشود</SelectItem>
-                          <SelectItem value="health">تحديات صحية</SelectItem>
+                          {HACKATHON_TRACKS.map((track) => (
+                            <SelectItem key={track} value={track}>{track}</SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
