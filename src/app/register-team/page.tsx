@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { REGISTRATION_CLOSED } from '@/lib/constants'
+import { REGISTRATION_CLOSED, MAX_FILE_SIZE, MAX_FILE_SIZE_MB } from '@/lib/constants'
+import { uploadFileToSupabase } from '@/lib/supabase-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -57,6 +58,11 @@ const initialFormState = {
 }
 
 type FormState = typeof initialFormState;
+
+/* Attachment rules — keep in sync with the storage helper's content-type map
+   (src/lib/supabase-storage.ts) and the uploads bucket's 25MB limit. */
+const ATTACHMENT_EXTENSIONS = ['pdf', 'doc', 'docx', 'pptx', 'zip', 'rar', 'jpg', 'jpeg', 'png']
+const ATTACHMENT_ACCEPT = ATTACHMENT_EXTENSIONS.map((e) => `.${e}`).join(',')
 
 /* Project-acceptance rules shown next to the idea-description field, so
    applicants read them before writing their idea. Display-only. */
@@ -190,6 +196,36 @@ export default function RegisterTeamPage() {
       localStorage.setItem('registrationForm', JSON.stringify(formState))
     }
   }, [formState, mounted])
+
+  const handleAttachmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null
+    if (!file) {
+      setAttachmentFile(null)
+      return
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+    if (!ATTACHMENT_EXTENSIONS.includes(ext)) {
+      toast({
+        title: 'نوع الملف غير مدعوم',
+        description: `الأنواع المسموحة: ${ATTACHMENT_EXTENSIONS.join('، ')}`,
+        variant: 'destructive',
+      })
+      e.target.value = ''
+      setAttachmentFile(null)
+      return
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: 'حجم الملف كبير',
+        description: `الحد الأقصى لحجم المرفق ${MAX_FILE_SIZE_MB} ميجابايت`,
+        variant: 'destructive',
+      })
+      e.target.value = ''
+      setAttachmentFile(null)
+      return
+    }
+    setAttachmentFile(file)
+  }
 
   const handleStateChange = (field: keyof FormState, value: any) => {
     setFormState((prev: FormState) => ({ ...prev, [field]: value }))
@@ -345,8 +381,24 @@ export default function RegisterTeamPage() {
       formData.append('members', JSON.stringify(formState.members.slice(0, formState.memberCount - 1)))
     }
 
+    // Upload the attachment straight from the browser to Supabase Storage.
+    // Sending the file through the API route hits Vercel's request-body limit
+    // (FUNCTION_PAYLOAD_TOO_LARGE at ~4.5MB) long before our 25MB rule; this
+    // way the function only ever receives the file's URL.
     if (attachmentFile) {
-      formData.append('attachment', attachmentFile)
+      try {
+        const { publicUrl } = await uploadFileToSupabase(attachmentFile, 'teams')
+        formData.append('attachmentPath', publicUrl)
+      } catch (error) {
+        console.error('Attachment upload failed', error)
+        toast({
+          title: 'خطأ',
+          description: 'فشل رفع المرفق، يرجى المحاولة مرة أخرى',
+          variant: 'destructive',
+        })
+        setIsSubmitting(false)
+        return
+      }
     }
 
     try {
@@ -718,15 +770,16 @@ export default function RegisterTeamPage() {
                     <Label htmlFor="attachments-file" className="text-base font-medium mb-2 block" style={{ color: '#620F10', fontFamily: 'Somar-Medium, Arial, sans-serif' }}>
                       إضافة مرفقات (اختياري)
                     </Label>
-                    <Input 
-                      id="attachments-file" 
-                      type="file" 
-                      onChange={(e) => setAttachmentFile(e.target.files ? e.target.files[0] : null)}
+                    <Input
+                      id="attachments-file"
+                      type="file"
+                      accept={ATTACHMENT_ACCEPT}
+                      onChange={handleAttachmentChange}
                       className="h-11 border-2 border-gray-200 focus:border-[#620F10] rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#620F10] file:text-white hover:file:bg-[#4a0c0d]"
                       style={{ fontFamily: 'Somar-Light, Arial, sans-serif' }}
                     />
                     <p className="text-sm mt-2" style={{ color: '#620F10', fontFamily: 'Somar-Light, Arial, sans-serif' }}>
-                      ارفاق المتوفر من شعار، ملف تعريفي، الخ.
+                      ارفاق المتوفر من شعار، ملف تعريفي، الخ. (بحد أقصى {MAX_FILE_SIZE_MB} ميجابايت — PDF, Word, PowerPoint, ZIP, صور)
                     </p>
                   </div>
                 </div>
